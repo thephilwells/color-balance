@@ -1,0 +1,68 @@
+body {
+  background: #444;
+}
+
+canvas {
+  display: block;
+  background: #fff;
+  margin: 50px auto;
+}
+
+.win-message.hidden {
+  opacity: 0;
+}
+
+.win-message {
+  opacity: 1;
+  transition: opacity .3s;
+}
+
+.main {
+  width: 600px;
+  margin: 0 auto;
+}
+
+.main p {
+  margin-bottom: 5px;
+  color: white;
+  font-family: input;
+}
+
+.output {
+  color: white;
+  font-size:15px;
+  width: 200px;
+  user-select: none;
+  position: absolute;
+}
+
+.bars {
+  margin: 0 auto 10px auto;
+  width: 600px;
+  display: flex;
+}
+
+.bars.current {
+  background: #555;
+}
+
+.bars > div {
+  height: 15px;
+  transition: width .3s;
+}
+
+.indicator1 {
+  background-color: #D80034;
+}
+
+.indicator2 {
+  background-color: #FFA756;
+}
+
+.indicator3 {
+  background-color: #34A374;
+}
+
+.indicator4 {
+  background-color: #C8FCFF;
+}
