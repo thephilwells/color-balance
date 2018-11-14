@@ -9,23 +9,61 @@
         <link rel="stylesheet" href="main.css">
     </head>
     <body>
+      <div class="start-screen">
+        <div class="start-screen-content">
+          <h1>Color<br>Balance</h1>
+          <button>Start!</button>
+        </div>
+      </div>
       <div class="main">
-        <p class="win-message hidden">no match</p>
-        <p class="goals-text">Goal</p>
+        <div class="metadata-area">
+          <div class="col">
+          <p>Level</p>
+          <p class="level">1</p>
+          </div>
+          <div class="col">
+          <p>Time Remaining</p>
+          <p class="time-remaining">120s</p>
+          </div>
+        </div>
+        <div class="indicator-area">
         <div class="bars goal">
+          <div class="match-screen"></div>
           <div class="indicator1"></div>
           <div class="indicator2"></div>
           <div class="indicator3"></div>
           <div class="indicator4"></div>
         </div>
-        <p class="current-text">Current</p>
+        <div class="hashes">
+          <div class="hash"></div>
+          <div class="hash"></div>
+          <div class="hash"></div>
+          <div class="hash"></div>
+          <div class="hash"></div>
+        </div>
         <div class="bars current">
           <div class="indicator1"></div>
           <div class="indicator2"></div>
           <div class="indicator3"></div>
           <div class="indicator4"></div>
         </div>
-        <canvas id="canvas" height=500 width=600></canvas>
+        </div>
+        <canvas id="canvas"></canvas>
+        <p class="win-message hidden">Match!</p>
+        <div class="keyboard-controls">
+          <p>A</p>
+          <p>S</p>
+          <p>D</p>
+          <p>F</p>
+        </div>
+      </div>
+      <div class="end-screen hidden">
+        <div class="end-screen-content">
+          <h2>Game Over!</h2>
+          <p>Your score was <span class="score">1</span>.</p>
+          <img src="" alt="" class="final-image">
+          <p class="instructions">(Right click to save your photo)</p>
+        </div>
       </div>
       <script src="main.js"></script>
     </body>

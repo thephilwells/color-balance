@@ -1,31 +1,133 @@
+html {
+  --bc: #000000;
+  --bc-l: #2d2d2d;
+  --color-1: #D67D7D;
+  --color-2: #3C42CF;
+  --color-3: #F3D6BB;
+  --color-4: #5AB9BF;
+}
+
 body {
-  background: #444;
+  background: var(--bc);
+  font: italic normal 1rem/1 Hatch;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  height: 100vh;
+  display: flex;
+  color: white;
+  overflow: hidden;
 }
 
 canvas {
   display: block;
-  background: #fff;
-  margin: 50px auto;
+  background: var(--bc-1);
+  margin: 10px auto;
+}
+
+.start-screen,
+.end-screen {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background: var(--bc);
+  z-index: 1;
+  transition: all .5s;
+  top: 0;
+}
+
+.start-screen-content,
+.end-screen-content {
+  width: 90vw;
+  height: 100%;
+  margin: 0 auto;
+  max-width: 600px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.start-screen.hidden,
+.end-screen.hidden {
+  top: 100vh;
+}
+
+.start-screen-content h1 {
+  font-size: 70px;
+  margin-bottom: 15vh;
+}
+
+.start-screen-content button {
+  -webkit-appearance: none;
+  background: white;
+  color: black;
+  font: inherit;
+  border: none;
+  padding: 10px 20px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.end-screen h2 {
+  font-size: 70px;
+}
+
+.end-screen p {
+  font-size: 25px;
+  background: white;
+  color: black;
+  padding: 15px;
+}
+
+.end-screen img {
+  width: 90vw;
+  max-width: 400px;
+  margin-top: 10vh;
 }
 
 .win-message.hidden {
   opacity: 0;
+  top: 60%;
 }
 
 .win-message {
   opacity: 1;
-  transition: opacity .3s;
+  transition: all .3s;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  padding: 0 14px;
+  transform: translate(-50%, -50%);
+  font-size: 50px;
+  font-style: italic;
+  font-weight: bold;
+  pointer-events: none;
+  // -webkit-text-stroke: 1px #444;
+  // text-shadow: 0 3px #444, 0 6px #444;
+  background: var(--bc);
 }
 
 .main {
   width: 600px;
   margin: 0 auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center
 }
 
-.main p {
+@media (max-width: 700px) {
+  .main {
+    width: 90vw;
+  }
+}
+
+p {
   margin-bottom: 5px;
   color: white;
-  font-family: input;
+  font-family: hatch;
+  font-size: 20px;
 }
 
 .output {
@@ -36,33 +138,142 @@ canvas {
   position: absolute;
 }
 
-.bars {
-  margin: 0 auto 10px auto;
-  width: 600px;
+.metadata-area {
   display: flex;
+  margin-bottom: 20px;
+}
+
+.col:first-child {
+  width: 25%;
+  margin-right: 50px;
+}
+
+.col:last-child {
+  width: 70%;
+}
+
+.col p {
+  margin: 0;
+}
+
+.level,
+.time-remaining {
+  font-size: 50px;
+  text-align: right;
+}
+
+.indicator-area {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+}
+
+.hashes {
+  border-bottom: 1px solid white;
+  margin: 12px 0;
+  position: relative;
+}
+
+.hash {
+  border-left: 1px solid white;
+  position: absolute;
+  height: 10px;
+  width: 0;
+  top: -5px;
+}
+
+.hash:nth-child(2) {
+  left: 25%;
+}
+
+.hash:nth-child(3) {
+  left: 50%;
+}
+
+.hash:nth-child(4) {
+  left: 75%;
+}
+
+.hash:nth-child(5) {
+  left: 100%;
+}
+
+.bars {
+  width: 100%;
+  height: 15px;
+  display: flex;
+  position: relative;
 }
 
 .bars.current {
-  background: #555;
+  background: var(--bc-l);
+  margin-right: 10px;
 }
 
 .bars > div {
-  height: 15px;
-  transition: width .3s;
+  transition: all .3s;
+}
+
+.match-screen {
+  position: absolute;
+  background: white;
+  width: 100%;
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.match-screen.up {
+  opacity: 1;
 }
 
 .indicator1 {
-  background-color: #D80034;
+  background-color: var(--color-1);
+}
+.keyboard-controls > p:nth-child(1) {
+  color: var(--color-1);
 }
 
 .indicator2 {
-  background-color: #FFA756;
+  background-color: var(--color-2);
+}
+.keyboard-controls > p:nth-child(2) {
+  color: var(--color-2);
 }
 
 .indicator3 {
-  background-color: #34A374;
+  background-color: var(--color-3);
+}
+.keyboard-controls > p:nth-child(3) {
+  color: var(--color-3);
 }
 
 .indicator4 {
-  background-color: #C8FCFF;
+  background-color: var(--color-4);
+}
+.keyboard-controls > p:nth-child(4) {
+  color: var(--color-4);
+}
+
+.keyboard-controls {
+  display: flex;
+  justify-content: center;
+}
+
+.keyboard-controls > p {
+  background: var(--bc);
+  border: 4px solid var(--bc);
+  display: flex;
+  width: 50px;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  position: relative;
+  text-transform: lowercase;
+  font: italic 900 30px/1 Hatch;
+}
+
+.keyboard-controls > p.down {
+  border: 4px solid white;
 }

@@ -1,24 +1,41 @@
-var c = document.getElementById("canvas");
-var ctx = c.getContext("2d");
 
 //setup
-var w = 600;
-var h = 500;
+var w = document.querySelector(".main").offsetWidth;
+var h = 300;
 var bSize = 50;
 var currentPs = [];
 var goalPs = [];
 
+var c = document.getElementById("canvas");
+var ctx = c.getContext("2d");
+
+c.width = w;
+c.height = h;
+
 //colors
 var colors = [
-  "#D80034",
-  "#FEA756",
-  "#34A374",
-  "#C8FCFF"
+  "#D67D7D",
+  "#3C42CF",
+  "#F3D6BB",
+  "#5AB9BF"
 ]
 var currentColor = colors[0];
 
 //state
 var isMouseDown;
+var timer = 0;
+var timerTick;
+var level = 1;
+
+function tick() {
+  timer+=1;
+  if(timer > 60) {
+    clearTimeout(timerTick);
+    endGame();
+  } else {
+    document.querySelector(".time-remaining").innerHTML = (60 - timer) + "s";
+  }
+}
 
 function generateRandomGoals() {
   var g = [];
@@ -35,7 +52,7 @@ function generateRandomGoals() {
   goals = goals.map(e => e+2);
 
   //set widths of things
-  adjustWidths("goal", goals)
+  adjustBars("goal", goals)
   return goals;
 }
 
@@ -53,6 +70,17 @@ function drawCorners() {
   ctx.fillRect(0,h-bSize,bSize,bSize);
   ctx.fillStyle = colors[3];
   ctx.fillRect(w-bSize,h-bSize,bSize,bSize);
+}
+
+function drawQuadrants() {
+  ctx.fillStyle = colors[0];
+  ctx.fillRect(0,0,w/2,h/2);
+  ctx.fillStyle = colors[1];
+  ctx.fillRect(w/2,0,w/2,h/2);
+  ctx.fillStyle = colors[2];
+  ctx.fillRect(0,h/2,w/2,h/2);
+  ctx.fillStyle = colors[3];
+  ctx.fillRect(w/2,h/2,w/2,h/2);
 }
 
 function brush(x, y) {
@@ -75,10 +103,10 @@ function checkPercentage() {
     }
   }
   currentPs = counts.map(x => (x / (w*h))*100);
-  adjustWidths("current", currentPs);
+  adjustBars("current", currentPs);
 }
 
-function adjustWidths(which, amountsArray) {
+function adjustBars(which, amountsArray) {
   for(var i = 0; i < amountsArray.length; i++) {
     var cn = "."+which+" .indicator" + (i + 1);
     document.querySelector(cn).style.width = (amountsArray[i]) + "%";
@@ -86,7 +114,6 @@ function adjustWidths(which, amountsArray) {
 }
 
 function checkForWin() {
-  var wm = document.querySelector(".win-message");
   var allWithin = true;
   for(var i = 0; i < 4; i++) {
     var tolerance = 5;
@@ -95,18 +122,37 @@ function checkForWin() {
     }
   }
   if(allWithin) {
-    console.log("totes match");
-    wm.classList.remove("hidden");
-    wm.innerHTML = "Match!";
-    setTimeout(function (e) {
-      wm.classList.add("hidden");
-    }, 1000)
+    matchAnimation();
+    levelUp();
     goalPs = generateRandomGoals();
-  } else {
-    console.log("no match! ----");
-    console.log(currentPs);
-    console.log(goalPs);
   }
+}
+
+function levelUp() {
+  console.log(level);
+  console.log("level up");
+  document.querySelector(".level").innerHTML = ++level;
+}
+
+function matchAnimation() {
+  var wm = document.querySelector(".win-message");
+  var ms = document.querySelector(".match-screen");
+  wm.classList.remove("hidden");
+  wm.innerHTML = "Match!";
+  // ms.classList.add("up");
+  setTimeout(function (e) {
+    wm.classList.add("hidden");
+  }, 1000)
+  // setTimeout(function (e) {
+  //   ms.classList.remove("up");
+  // }, 300)
+}
+
+function endGame() {
+  document.querySelector(".end-screen").classList.remove("hidden");
+  document.querySelector(".score").innerHTML = level;
+  var imgData = c.toDataURL("image/png");
+  document.querySelector(".final-image").src = imgData;
 }
 
 document.addEventListener("mousedown", function(e){
@@ -119,7 +165,7 @@ document.addEventListener("mousedown", function(e){
 
 c.addEventListener('mousemove', function(e){
   if(isMouseDown) {
-    drawCorners();
+    //drawCorners();
     brush(e.offsetX, e.offsetY);
   }
 })
@@ -130,13 +176,59 @@ document.addEventListener("mouseup", function(){
 });
 
 document.addEventListener("keydown", function (e) {
-  if(e.keyCode == 32) {
-    goalPs = generateRandomGoals();
+  var kc = document.querySelector(".keyboard-controls");
+  switch(e.keyCode) {
+    case 65: //a
+      currentColor = colors[0];
+      kc.querySelector("p:nth-child(1)").classList.add("down");
+    break;
+    case 83: //s
+      currentColor = colors[1];
+      kc.querySelector("p:nth-child(2)").classList.add("down");
+    break;
+    case 68: //d
+      currentColor = colors[2];
+      kc.querySelector("p:nth-child(3)").classList.add("down");
+    break;
+    case 70: //f
+      currentColor = colors[3]; 
+      kc.querySelector("p:nth-child(4)").classList.add("down");
+    break;
   }
+  isMouseDown = true;
 })
 
-ctx.fillStyle = "#555";
+document.addEventListener("keyup", function (e) {
+  var kc = document.querySelector(".keyboard-controls");
+  switch(e.keyCode) {
+    case 65: //a
+      kc.querySelector("p:nth-child(1)").classList.remove("down");
+      checkForWin();
+    break;
+    case 83: //s
+      kc.querySelector("p:nth-child(2)").classList.remove("down");
+      checkForWin();
+    break;
+    case 68: //d
+      kc.querySelector("p:nth-child(3)").classList.remove("down");
+      checkForWin();
+    break;
+    case 70: //f
+      kc.querySelector("p:nth-child(4)").classList.remove("down");
+      checkForWin();
+    break;
+  }
+  isMouseDown = false;
+})
+
+document.querySelector(".start-screen button").addEventListener("click", function(e) {
+  document.querySelector(".start-screen").classList.add("hidden");
+  timerTick = setInterval(tick,1000);
+})
+
+ctx.fillStyle = "#2d2d2d";
 ctx.fillRect(0,0,w,h);
-drawCorners();
+// drawCorners();
+drawQuadrants();
 goalPs = generateRandomGoals();
 setInterval(checkPercentage,300);
