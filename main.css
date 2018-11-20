@@ -173,6 +173,7 @@ p {
   border-bottom: 1px solid white;
   margin: 12px 0;
   position: relative;
+  display: none;
 }
 
 .hash {
@@ -204,6 +205,15 @@ p {
   height: 15px;
   display: flex;
   position: relative;
+}
+
+.bars.goal div {
+  border-right: 1px solid white;
+  background-color: transparent !important;
+}
+
+.bars.goal div:first-child {
+  border-left: 1px solid white;
 }
 
 .bars.current {

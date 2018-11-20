@@ -88,7 +88,10 @@ function brush(x, y) {
   // ctx.beginPath();
   // ctx.arc(x, y, 25, 0, Math.PI*2);
   // ctx.fill();
-  ctx.fillRect(x-25, y-25,bSize,bSize);
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.fillRect(-25, -25,bSize,bSize);
+  ctx.restore();
 }
 
 function checkPercentage() {
@@ -115,13 +118,17 @@ function adjustBars(which, amountsArray) {
 
 function checkForWin() {
   var allWithin = true;
+  var offBy = 0;
   for(var i = 0; i < 4; i++) {
-    var tolerance = 5;
-    if( Math.abs( currentPs[i] - goalPs[i] ) > tolerance ) {
+    var tolerance = 10;
+    let diff = Math.abs( currentPs[i] - goalPs[i] );
+    offBy += diff;
+    if( diff > tolerance ) {
       allWithin = false;
     }
   }
   if(allWithin) {
+    console.log("off by: "+offBy);
     matchAnimation();
     levelUp();
     goalPs = generateRandomGoals();
