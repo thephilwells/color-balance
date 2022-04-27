@@ -1,10 +1,12 @@
 html {
-  --bc: #000000;
-  --bc-l: #2d2d2d;
-  --color-1: #D67D7D;
-  --color-2: #3C42CF;
-  --color-3: #F3D6BB;
-  --color-4: #5AB9BF;
+  --bc: #b8b8b8;
+  --bc-l: #b8b8b8;
+  --text-light: #ffffff;
+  --text-dark: #514eff;
+  --color-1: #ffffff;
+  --color-2: #3d1591;
+  --color-3: #F7C924;
+  --color-4: #F96C6C;
 }
 
 body {
@@ -53,6 +55,10 @@ canvas {
   top: 100vh;
 }
 
+h1, h2 {
+  color: var(--text-dark);
+}
+
 .start-screen-content h1 {
   font-size: 70px;
   margin-bottom: 15vh;
@@ -60,8 +66,8 @@ canvas {
 
 .start-screen-content button {
   -webkit-appearance: none;
-  background: white;
-  color: black;
+  background: var(--text-dark);
+  color: var(--text-light);
   font: inherit;
   border: none;
   padding: 10px 20px;
@@ -75,8 +81,8 @@ canvas {
 
 .end-screen p {
   font-size: 25px;
-  background: white;
-  color: black;
+  background: var(--text-dark);
+  color: var(--text-light);
   padding: 15px;
 }
 
@@ -105,7 +111,7 @@ canvas {
   pointer-events: none;
   // -webkit-text-stroke: 1px #444;
   // text-shadow: 0 3px #444, 0 6px #444;
-  background: var(--bc);
+  background: var(--text-dark);
 }
 
 .main {
@@ -125,17 +131,9 @@ canvas {
 
 p {
   margin-bottom: 5px;
-  color: white;
+  color: var(--text-light);
   font-family: hatch;
   font-size: 20px;
-}
-
-.output {
-  color: white;
-  font-size:15px;
-  width: 200px;
-  user-select: none;
-  position: absolute;
 }
 
 .metadata-area {
@@ -143,9 +141,14 @@ p {
   margin-bottom: 20px;
 }
 
+.col {
+  background: var(--text-dark);
+  padding: 15px 20px 10px 20px;
+}
+
 .col:first-child {
   width: 25%;
-  margin-right: 50px;
+  margin-right: 20px;
 }
 
 .col:last-child {
@@ -173,7 +176,6 @@ p {
   border-bottom: 1px solid white;
   margin: 12px 0;
   position: relative;
-  display: none;
 }
 
 .hash {
@@ -207,15 +209,6 @@ p {
   position: relative;
 }
 
-.bars.goal div {
-  border-right: 1px solid white;
-  background-color: transparent !important;
-}
-
-.bars.goal div:first-child {
-  border-left: 1px solid white;
-}
-
 .bars.current {
   background: var(--bc-l);
   margin-right: 10px;
@@ -223,18 +216,6 @@ p {
 
 .bars > div {
   transition: all .3s;
-}
-
-.match-screen {
-  position: absolute;
-  background: white;
-  width: 100%;
-  opacity: 0;
-  transition: opacity .2s;
-}
-
-.match-screen.up {
-  opacity: 1;
 }
 
 .indicator1 {
@@ -285,5 +266,5 @@ p {
 }
 
 .keyboard-controls > p.down {
-  border: 4px solid white;
+  border: 4px solid var(--text-dark);
 }

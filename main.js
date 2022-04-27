@@ -2,7 +2,7 @@
 //setup
 var w = document.querySelector(".main").offsetWidth;
 var h = 300;
-var bSize = 50;
+var bSize = 80;
 var currentPs = [];
 var goalPs = [];
 
@@ -14,10 +14,10 @@ c.height = h;
 
 //colors
 var colors = [
-  "#D67D7D",
-  "#3C42CF",
-  "#F3D6BB",
-  "#5AB9BF"
+  "#ffffff",
+  "#3d1591",
+  "#F7C924",
+  "#F96C6C"
 ]
 var currentColor = colors[0];
 
@@ -84,13 +84,25 @@ function drawQuadrants() {
 }
 
 function brush(x, y) {
+  var bs = bSize;
   ctx.fillStyle = currentColor;
   // ctx.beginPath();
   // ctx.arc(x, y, 25, 0, Math.PI*2);
   // ctx.fill();
   ctx.save();
   ctx.translate(x,y);
-  ctx.fillRect(-25, -25,bSize,bSize);
+  for(var i = 0; i < 500; i++) {
+    ctx.fillRect(Math.floor(Math.random()*(bs))-bs/2,Math.floor(Math.random()*(bs))-bs/2,1,1);
+  }
+  ctx.restore();
+}
+
+function squareBrush(x, y) {
+  var bs = bSize;
+  ctx.fillStyle = currentColor;
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.fillRect(-bs/2,-bs/2,bs,bs);
   ctx.restore();
 }
 
@@ -120,7 +132,7 @@ function checkForWin() {
   var allWithin = true;
   var offBy = 0;
   for(var i = 0; i < 4; i++) {
-    var tolerance = 10;
+    var tolerance = 5;
     let diff = Math.abs( currentPs[i] - goalPs[i] );
     offBy += diff;
     if( diff > tolerance ) {
@@ -173,11 +185,11 @@ document.addEventListener("mousedown", function(e){
 c.addEventListener('mousemove', function(e){
   if(isMouseDown) {
     //drawCorners();
-    brush(e.offsetX, e.offsetY);
+    squareBrush(e.offsetX, e.offsetY);
   }
 })
 
-document.addEventListener("mouseup", function(){ 
+document.addEventListener("mouseup", function(){
   checkForWin();
   isMouseDown = false;
 });
@@ -198,7 +210,7 @@ document.addEventListener("keydown", function (e) {
       kc.querySelector("p:nth-child(3)").classList.add("down");
     break;
     case 70: //f
-      currentColor = colors[3]; 
+      currentColor = colors[3];
       kc.querySelector("p:nth-child(4)").classList.add("down");
     break;
   }
