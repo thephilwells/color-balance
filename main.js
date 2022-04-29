@@ -9,6 +9,8 @@ var goalPs = [];
 var c = document.getElementById("canvas");
 var ctx = c.getContext("2d");
 
+var brushImg = document.getElementById("brush-sl");
+
 c.width = w;
 c.height = h;
 
@@ -26,6 +28,37 @@ var isMouseDown;
 var timer = 0;
 var timerTick;
 var level = 1;
+
+function makeColoredBrushImage() {
+  var bw = brushImg.width/4;
+  //create an offscreen canvas
+  var offCanvas = document.createElement("CANVAS");
+  offCanvas.width = bw;
+  offCanvas.height = bw;
+  var octx = offCanvas.getContext("2d");
+  //draw the brush onto it
+  octx.drawImage(brushImg, 0, 0, bw, bw);
+  var imgd = octx.getImageData(0, 0, bw, bw);
+  for (var i = 0; i <= imgd.data.length; i += 4) {
+    for (var j = 0; j < 4; j++) {
+      //if this pixel is not transparent,
+      if (imgd.data[i+3] !== 0) {
+        //make it the color of the current color
+        imgd.data[i] = 128;
+        imgd.data[i+1] = 0;
+        imgd.data[i+2] = 255;
+      }
+    }
+  }
+  //put the altered image back
+  octx.putImageData(imgd, 0, 0);
+  //save the canvas as image data
+  var imgu = offCanvas.toDataURL("image/png");
+  //upate the image with this new data
+  brushImg.src = imgu;
+}
+
+makeColoredBrushImage();
 
 function tick() {
   timer+=1;
@@ -103,6 +136,15 @@ function squareBrush(x, y) {
   ctx.save();
   ctx.translate(x,y);
   ctx.fillRect(-bs/2,-bs/2,bs,bs);
+  ctx.restore();
+}
+
+function imageBrush(x, y) {
+  var bs = brushImg.width;
+  ctx.fillStyle = currentColor;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.drawImage(brushImg, -bs / 2, -bs / 2, bs, bs);
   ctx.restore();
 }
 
@@ -186,6 +228,7 @@ c.addEventListener('mousemove', function(e){
   if(isMouseDown) {
     //drawCorners();
     squareBrush(e.offsetX, e.offsetY);
+    // imageBrush(e.offsetX, e.offsetY);
   }
 })
 

@@ -25,6 +25,9 @@ canvas {
   margin: 10px auto;
 }
 
+#canvas {
+  cursor: url(cursor.png), auto;
+}
 .start-screen,
 .end-screen {
   position: absolute;
@@ -133,6 +136,10 @@ p {
   color: var(--text-light);
   font-family: "ChevyRay - Roundabout";
   font-size: 20px;
+}
+
+#brushes {
+  display: none;
 }
 
 .metadata-area {
