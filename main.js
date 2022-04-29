@@ -2,7 +2,7 @@
 //setup
 var w = document.querySelector(".main").offsetWidth;
 var h = 300;
-var bSize = 80;
+var bSize = 30;
 var currentPs = [];
 var goalPs = [];
 

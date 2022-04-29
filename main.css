@@ -11,8 +11,7 @@ html {
 
 body {
   background: var(--bc);
-  font: italic normal 1rem/1 Hatch;
-  font-weight: bold;
+  font: normal normal 1rem/1 "ChevyRay - Roundabout";
   -webkit-font-smoothing: antialiased;
   height: 100vh;
   display: flex;
@@ -55,12 +54,10 @@ canvas {
   top: 100vh;
 }
 
-h1, h2 {
-  color: var(--text-dark);
-}
-
 .start-screen-content h1 {
   font-size: 70px;
+  letter-spacing: 3px;
+  line-height: 0.8;
   margin-bottom: 15vh;
 }
 
@@ -77,6 +74,8 @@ h1, h2 {
 
 .end-screen h2 {
   font-size: 70px;
+  letter-spacing: 3px;
+  line-height: 0.8;
 }
 
 .end-screen p {
@@ -132,7 +131,7 @@ h1, h2 {
 p {
   margin-bottom: 5px;
   color: var(--text-light);
-  font-family: hatch;
+  font-family: "ChevyRay - Roundabout";
   font-size: 20px;
 }
 
@@ -247,7 +246,7 @@ p {
 }
 
 .keyboard-controls {
-  display: flex;
+  display: none;
   justify-content: center;
 }
 
