@@ -111,8 +111,6 @@ canvas {
   font-style: italic;
   font-weight: bold;
   pointer-events: none;
-  // -webkit-text-stroke: 1px #444;
-  // text-shadow: 0 3px #444, 0 6px #444;
   background: var(--text-dark);
 }
 
