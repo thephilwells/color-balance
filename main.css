@@ -25,9 +25,19 @@ canvas {
   margin: 10px auto;
 }
 
+.canvas-container {
+  position: relative;
+}
+
 #canvas {
   cursor: url(cursor.png), auto;
 }
+
+#ui-canvas {
+  position: absolute;
+  top: 0;
+}
+
 .start-screen,
 .end-screen {
   position: absolute;
@@ -73,6 +83,7 @@ canvas {
   padding: 10px 20px;
   font-size: 20px;
   cursor: pointer;
+  margin-bottom: 10px;
 }
 
 .end-screen h2 {

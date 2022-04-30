@@ -9,10 +9,22 @@ var goalPs = [];
 var c = document.getElementById("canvas");
 var ctx = c.getContext("2d");
 
-var brushImg = document.getElementById("brush-sl");
+var uc = document.getElementById("ui-canvas");
+var uctx = uc.getContext("2d");
+uctx.fillRect(0,0,w,h);
+
+var brushImgs = [
+  document.getElementById("brush-sq"),
+  document.getElementById("brush-sl"),
+  document.getElementById("brush-st"),
+  document.getElementById("brush-sp")
+];
+var cursorImg = document.getElementById("cursor");
 
 c.width = w;
 c.height = h;
+uc.width = w;
+uc.height = h;
 
 //colors
 var colors = [
@@ -24,29 +36,103 @@ var colors = [
 var currentColor = colors[0];
 
 //state
-var isMouseDown;
+var isSinglePlayer = true;
+var isMouseDown = false;
 var timer = 0;
 var timerTick;
 var level = 1;
 
-function makeColoredBrushImage() {
-  var bw = brushImg.width/4;
+//constants
+const movementSpeed = 5;
+const maxVelocity = 5;
+
+//player variables
+var players = [
+  {
+    active: true,
+    x: 0,
+    y: h/2-12,
+    vx: 0,
+    vy: 0,
+    brushImage: brushImgs[0],
+    isDrawing: false,
+    color: colors[0],
+    keyUp: "w",
+    keyDown: "s",
+    keyLeft: "a",
+    keyRight: "d",
+    keyButton1: "q", //draw, ok
+    keyButton2: "e" //switch color, cancel
+  },
+  {
+    active: false,
+    x: w/4,
+    y: h/2-12,
+    vx: 0,
+    vy: 0,
+    brushImage: brushImgs[1],
+    isDrawing: false,
+    color: colors[1],
+    keyUp: "i",
+    keyDown: "k",
+    keyLeft: "j",
+    keyRight: "l",
+    keyButton1: "u", //draw, ok
+    keyButton2: "o" //switch color, cancel
+  },
+  {
+    active: false,
+    x: w/2,
+    y: h/2-12,
+    vx: 0,
+    vy: 0,
+    brushImage: brushImgs[2],
+    isDrawing: false,
+    color: colors[2],
+    keyUp: "z",
+    keyDown: "x",
+    keyLeft: "c",
+    keyRight: "v",
+    keyButton1: "b", //draw, ok
+    keyButton2: "e" //switch color, cancel
+  },
+  {
+    active: false,
+    x: w/2 + w/4,
+    y: h/2-12,
+    vx: 0,
+    vy: 0,
+    brushImage: brushImgs[3],
+    isDrawing: false,
+    color: colors[3],
+    keyUp: "9",
+    keyDown: "0",
+    keyLeft: "-",
+    keyRight: "=",
+    keyButton1: "8", //draw, ok
+    keyButton2: "e" //switch color, cancel
+  }
+]
+
+function makeColoredBrushImage(imgSrc, color) {
+  console.log(imgSrc);
+  var bw = imgSrc.width/4;
   //create an offscreen canvas
   var offCanvas = document.createElement("CANVAS");
   offCanvas.width = bw;
   offCanvas.height = bw;
   var octx = offCanvas.getContext("2d");
   //draw the brush onto it
-  octx.drawImage(brushImg, 0, 0, bw, bw);
+  octx.drawImage(imgSrc, 0, 0, bw, bw);
   var imgd = octx.getImageData(0, 0, bw, bw);
   for (var i = 0; i <= imgd.data.length; i += 4) {
     for (var j = 0; j < 4; j++) {
       //if this pixel is not transparent,
       if (imgd.data[i+3] !== 0) {
         //make it the color of the current color
-        imgd.data[i] = 128;
-        imgd.data[i+1] = 0;
-        imgd.data[i+2] = 255;
+        imgd.data[i] = hexToDecimal(color, 1);
+        imgd.data[i + 1] = hexToDecimal(color, 3);
+        imgd.data[i + 2] = hexToDecimal(color, 5);
       }
     }
   }
@@ -55,10 +141,8 @@ function makeColoredBrushImage() {
   //save the canvas as image data
   var imgu = offCanvas.toDataURL("image/png");
   //upate the image with this new data
-  brushImg.src = imgu;
+  imgSrc.src = imgu;
 }
-
-makeColoredBrushImage();
 
 function tick() {
   timer+=1;
@@ -89,9 +173,9 @@ function generateRandomGoals() {
   return goals;
 }
 
-function hexToDecimal(colorString) {
-  var red = colorString.substring(1,3);
-  return parseInt(red, 16);
+function hexToDecimal(colorString, start) {
+  var hex = colorString.substring(start, start+2);
+  return parseInt(hex, 16);
 }
 
 function drawCorners() {
@@ -139,17 +223,18 @@ function squareBrush(x, y) {
   ctx.restore();
 }
 
-function imageBrush(x, y) {
+function imageBrush(x, y, brushImg, color) {
   var bs = brushImg.width;
-  ctx.fillStyle = currentColor;
+  ctx.fillStyle = color;
   ctx.save();
   ctx.translate(x, y);
   ctx.drawImage(brushImg, -bs / 2, -bs / 2, bs, bs);
   ctx.restore();
+  console.log(brushImg);
 }
 
 function checkPercentage() {
-  var reds = colors.map(c => hexToDecimal(c));
+  var reds = colors.map(c => hexToDecimal(c,1));
   var counts = [0,0,0,0];
   var imgd = ctx.getImageData(0,0,w,h);
   for(var i = 0; i <= imgd.data.length; i += 4) {
@@ -209,6 +294,14 @@ function matchAnimation() {
   // }, 300)
 }
 
+function startGame() {
+  for(var i = 0; i < brushImgs.length; i++) {
+    makeColoredBrushImage(brushImgs[i], colors[i]);
+  }
+  document.querySelector(".start-screen").classList.add("hidden");
+  timerTick = setInterval(tick, 1000);
+}
+
 function endGame() {
   document.querySelector(".end-screen").classList.remove("hidden");
   document.querySelector(".score").innerHTML = level;
@@ -216,76 +309,123 @@ function endGame() {
   document.querySelector(".final-image").src = imgData;
 }
 
-document.addEventListener("mousedown", function(e){
-  if(e.target == c) {
-    var eyedrop = ctx.getImageData(e.offsetX, e.offsetY, 1, 1);
-    currentColor = "rgb("+eyedrop.data[0]+","+eyedrop.data[1]+","+eyedrop.data[2]+")";
+//
+//COMMENTING OUT MOUSE CODE FOR NOW
+//
+
+// document.addEventListener("mousedown", function(e){
+  // if(e.target == c) {
+  //   var eyedrop = ctx.getImageData(e.offsetX, e.offsetY, 1, 1);
+  //   currentColor = "rgb("+eyedrop.data[0]+","+eyedrop.data[1]+","+eyedrop.data[2]+")";
+  // }
+  // isMouseDown = true;
+// })
+
+uc.addEventListener('mousemove', function(e){
+  if(isSinglePlayer) {
+    players[0].x = e.offsetX;
+    players[0].y = e.offsetY;
+    if(isMouseDown) {
+      squareBrush(players[0].x, players[0].y);
+    }
   }
-  isMouseDown = true;
 })
 
-c.addEventListener('mousemove', function(e){
-  if(isMouseDown) {
-    //drawCorners();
-    squareBrush(e.offsetX, e.offsetY);
-    // imageBrush(e.offsetX, e.offsetY);
-  }
-})
+// document.addEventListener("mouseup", function(){
+//   checkForWin();
+//   isMouseDown = false;
+// });
 
-document.addEventListener("mouseup", function(){
-  checkForWin();
-  isMouseDown = false;
-});
+function handleKeyDown(key, playerObject) {
+  switch (key) {
+    case playerObject.keyUp:
+      playerObject.vy -= movementSpeed;
+      break;
+    case playerObject.keyLeft:
+      playerObject.vx -= movementSpeed;
+      break;
+    case playerObject.keyDown:
+      playerObject.vy += movementSpeed;
+      break;
+    case playerObject.keyRight:
+      playerObject.vx += movementSpeed;
+      break;
+    case playerObject.keyButton1:
+      playerObject.isDrawing = true;
+      break;
+  }
+}
 
 document.addEventListener("keydown", function (e) {
-  var kc = document.querySelector(".keyboard-controls");
-  switch(e.keyCode) {
-    case 65: //a
-      currentColor = colors[0];
-      kc.querySelector("p:nth-child(1)").classList.add("down");
-    break;
-    case 83: //s
-      currentColor = colors[1];
-      kc.querySelector("p:nth-child(2)").classList.add("down");
-    break;
-    case 68: //d
-      currentColor = colors[2];
-      kc.querySelector("p:nth-child(3)").classList.add("down");
-    break;
-    case 70: //f
-      currentColor = colors[3];
-      kc.querySelector("p:nth-child(4)").classList.add("down");
-    break;
+  if(isSinglePlayer) {
+    isMouseDown = true;
+    switch(e.key) {
+      case '1':
+        currentColor = colors[0];
+      break;
+      case '2':
+        currentColor = colors[1];
+      break;
+      case '3':
+        currentColor = colors[2];
+      break;
+      case '4':
+        currentColor = colors[3];
+      break;
+    }
+  } else {
+    for (var i = 0; i < players.length; i++) {
+      handleKeyDown(e.key, players[i]);
+    }
   }
-  isMouseDown = true;
 })
+
+function handleKeyUp(key, playerObject) {
+  switch (key) {
+    case playerObject.keyUp:
+      playerObject.vy = 0;
+      break;
+    case playerObject.keyLeft:
+      playerObject.vx = 0;
+      break;
+    case playerObject.keyDown:
+      playerObject.vy = 0;
+      break;
+    case playerObject.keyRight:
+      playerObject.vx = 0;
+      break;
+    case playerObject.keyButton1:
+      playerObject.isDrawing = false;
+      break;
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+      isMouseDown = false;
+      break;
+  }
+  checkForWin();
+}
 
 document.addEventListener("keyup", function (e) {
-  var kc = document.querySelector(".keyboard-controls");
-  switch(e.keyCode) {
-    case 65: //a
-      kc.querySelector("p:nth-child(1)").classList.remove("down");
-      checkForWin();
-    break;
-    case 83: //s
-      kc.querySelector("p:nth-child(2)").classList.remove("down");
-      checkForWin();
-    break;
-    case 68: //d
-      kc.querySelector("p:nth-child(3)").classList.remove("down");
-      checkForWin();
-    break;
-    case 70: //f
-      kc.querySelector("p:nth-child(4)").classList.remove("down");
-      checkForWin();
-    break;
+  for (var i = 0; i < players.length; i++) {
+    handleKeyUp(e.key, players[i]);
   }
-  isMouseDown = false;
 })
 
-document.querySelector(".start-screen button").addEventListener("click", function(e) {
-  document.querySelector(".start-screen").classList.add("hidden");
-  timerTick = setInterval(tick,1000);
+document.querySelector(".start-screen .start-1p").addEventListener("click", function(e) {
+  isSinglePlayer = true;
+  players[0].active = true;
+  startGame();
+})
+
+document.querySelector(".start-screen .start-4p").addEventListener("click", function (e) {
+  isSinglePlayer = false;
+  players[0].active = true;
+  players[1].active = true;
+  players[2].active = true;
+  players[3].active = true;
+  startGame();
 })
 
 ctx.fillStyle = "#2d2d2d";
@@ -294,3 +434,31 @@ ctx.fillRect(0,0,w,h);
 drawQuadrants();
 goalPs = generateRandomGoals();
 setInterval(checkPercentage,300);
+
+function drawPaint() {
+  for(var i = 0; i < players.length; i++) {
+    if(players[i].isDrawing) {
+      imageBrush(players[i].x, players[i].y, players[i].brushImage, players[i].color);
+    }
+  }
+  requestAnimationFrame(drawPaint);
+}
+
+function drawCursors() {
+  uctx.clearRect(0,0,w,h);
+  for(var i = 0; i < players.length; i++) {
+    if(players[i].active) {
+      if(!isSinglePlayer) {
+        players[i].vx = Math.min(Math.max(players[i].vx, -maxVelocity), maxVelocity);
+        players[i].vy = Math.min(Math.max(players[i].vy, -maxVelocity), maxVelocity);
+        players[i].x += players[i].vx;
+        players[i].y += players[i].vy;
+      }
+      uctx.drawImage(cursorImg, players[i].x, players[i].y, 25, 25);
+    }
+  }
+  requestAnimationFrame(drawCursors);
+}
+
+drawPaint();
+drawCursors();
