@@ -15,6 +15,7 @@ You need to map keyboard presses to other inputs, since it's not ergonomic for f
 Here are the controls for each player on the keyboard.
 
 | Player | Up | Down | Left | Right | Paint |
+| ------ | -- | ---- | ---- | ----- | ----- |
 | 1      | W  | S    | A    | D     | Q     |
 | 2      | I  | K    | J    | L     | U     |
 | 3      | Z  | X    | C    | V     | B     |
