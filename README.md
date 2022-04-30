@@ -1,6 +1,6 @@
 # How To Play
 
-Paint on the canvas and balance the 4 colors in the palette as many times as you can before time runs out. The ratio of colors is shown in the bar above the canvas; match the ratios of the 4 colors as show in the top bar to score 1 point.
+Paint on the canvas and balance the 4 colors in the palette as many times as you can before time runs out. The ratio of colors is shown in the bar above the canvas; match the ratios of the 4 colors as shown in the top bar to score 1 point.
 
 ## 1-Player Mode
 
