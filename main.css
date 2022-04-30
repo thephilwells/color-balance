@@ -1,3 +1,8 @@
+@font-face {
+  font-family: "Roundabout";
+  src: url("/ChevyRay\ -\ Roundabout.ttf") format("truetype");
+}
+
 html {
   --bc: #b8b8b8;
   --bc-l: #b8b8b8;
@@ -11,7 +16,7 @@ html {
 
 body {
   background: var(--bc);
-  font: normal normal 1rem/1 "ChevyRay - Roundabout";
+  font: normal normal 1rem/1 "Roundabout";
   -webkit-font-smoothing: antialiased;
   height: 100vh;
   display: flex;
@@ -143,7 +148,7 @@ canvas {
 p {
   margin-bottom: 5px;
   color: var(--text-light);
-  font-family: "ChevyRay - Roundabout";
+  font-family: "Roundabout";
   font-size: 20px;
 }
 
