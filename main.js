@@ -1,3 +1,4 @@
+import { spritePositionToImagePosition } from "./sprite.js";
 
 //setup
 var w = document.querySelector(".main").offsetWidth;
@@ -11,13 +12,13 @@ var ctx = c.getContext("2d");
 
 var uc = document.getElementById("ui-canvas");
 var uctx = uc.getContext("2d");
-uctx.fillRect(0,0,w,h);
+uctx.fillRect(0, 0, w, h);
 
 var brushImgs = [
   document.getElementById("brush-sq"),
   document.getElementById("brush-sl"),
   document.getElementById("brush-st"),
-  document.getElementById("brush-sp")
+  document.getElementById("brush-sp"),
 ];
 var cursorImg = document.getElementById("cursor");
 
@@ -27,12 +28,7 @@ uc.width = w;
 uc.height = h;
 
 //colors
-var colors = [
-  "#ffffff",
-  "#3d1591",
-  "#F7C924",
-  "#F96C6C"
-]
+var colors = ["#ffffff", "#3d1591", "#F7C924", "#F96C6C"];
 var currentColor = colors[0];
 
 //state
@@ -51,7 +47,7 @@ var players = [
   {
     active: true,
     x: 0,
-    y: h/2-12,
+    y: h / 2 - 12,
     vx: 0,
     vy: 0,
     brushImage: brushImgs[0],
@@ -62,12 +58,12 @@ var players = [
     keyLeft: "a",
     keyRight: "d",
     keyButton1: "q", //draw, ok
-    keyButton2: "e" //switch color, cancel
+    keyButton2: "e", //switch color, cancel
   },
   {
     active: false,
-    x: w/4,
-    y: h/2-12,
+    x: w / 4,
+    y: h / 2 - 12,
     vx: 0,
     vy: 0,
     brushImage: brushImgs[1],
@@ -78,12 +74,12 @@ var players = [
     keyLeft: "j",
     keyRight: "l",
     keyButton1: "u", //draw, ok
-    keyButton2: "o" //switch color, cancel
+    keyButton2: "o", //switch color, cancel
   },
   {
     active: false,
-    x: w/2,
-    y: h/2-12,
+    x: w / 2,
+    y: h / 2 - 12,
     vx: 0,
     vy: 0,
     brushImage: brushImgs[2],
@@ -94,12 +90,12 @@ var players = [
     keyLeft: "c",
     keyRight: "v",
     keyButton1: "b", //draw, ok
-    keyButton2: "e" //switch color, cancel
+    keyButton2: "e", //switch color, cancel
   },
   {
     active: false,
-    x: w/2 + w/4,
-    y: h/2-12,
+    x: w / 2 + w / 4,
+    y: h / 2 - 12,
     vx: 0,
     vy: 0,
     brushImage: brushImgs[3],
@@ -110,13 +106,13 @@ var players = [
     keyLeft: "-",
     keyRight: "=",
     keyButton1: "8", //draw, ok
-    keyButton2: "e" //switch color, cancel
-  }
-]
+    keyButton2: "e", //switch color, cancel
+  },
+];
 
 function makeColoredBrushImage(imgSrc, color) {
-  console.log(imgSrc);
-  var bw = imgSrc.width/4;
+  // console.log(imgSrc);
+  var bw = imgSrc.width / 4;
   //create an offscreen canvas
   var offCanvas = document.createElement("CANVAS");
   offCanvas.width = bw;
@@ -128,7 +124,7 @@ function makeColoredBrushImage(imgSrc, color) {
   for (var i = 0; i <= imgd.data.length; i += 4) {
     for (var j = 0; j < 4; j++) {
       //if this pixel is not transparent,
-      if (imgd.data[i+3] !== 0) {
+      if (imgd.data[i + 3] !== 0) {
         //make it the color of the current color
         imgd.data[i] = hexToDecimal(color, 1);
         imgd.data[i + 1] = hexToDecimal(color, 3);
@@ -145,59 +141,59 @@ function makeColoredBrushImage(imgSrc, color) {
 }
 
 function tick() {
-  timer+=1;
-  if(timer > 60) {
+  timer += 1;
+  if (timer > 60) {
     clearTimeout(timerTick);
     endGame();
   } else {
-    document.querySelector(".time-remaining").innerHTML = (60 - timer) + "s";
+    document.querySelector(".time-remaining").innerHTML = 60 - timer + "s";
   }
 }
 
 function generateRandomGoals() {
   var g = [];
-  for(var i = 0; i < 3; i++) {
+  for (var i = 0; i < 3; i++) {
     g.push(Math.floor(Math.random() * 92));
   }
-  g.sort((a,b)=>a-b);
+  g.sort((a, b) => a - b);
   g.push(92);
   g.unshift(0);
   var goals = [];
-  for(var i = 0; i < g.length-1; i++) {
-    goals.push( g[i+1] - g[i] );
+  for (var i = 0; i < g.length - 1; i++) {
+    goals.push(g[i + 1] - g[i]);
   }
-  goals = goals.map(e => e+2);
+  goals = goals.map((e) => e + 2);
 
   //set widths of things
-  adjustBars("goal", goals)
+  adjustBars("goal", goals);
   return goals;
 }
 
 function hexToDecimal(colorString, start) {
-  var hex = colorString.substring(start, start+2);
+  var hex = colorString.substring(start, start + 2);
   return parseInt(hex, 16);
 }
 
 function drawCorners() {
   ctx.fillStyle = colors[0];
-  ctx.fillRect(0,0,bSize,bSize);
+  ctx.fillRect(0, 0, bSize, bSize);
   ctx.fillStyle = colors[1];
-  ctx.fillRect(w-bSize,0,bSize,bSize);
+  ctx.fillRect(w - bSize, 0, bSize, bSize);
   ctx.fillStyle = colors[2];
-  ctx.fillRect(0,h-bSize,bSize,bSize);
+  ctx.fillRect(0, h - bSize, bSize, bSize);
   ctx.fillStyle = colors[3];
-  ctx.fillRect(w-bSize,h-bSize,bSize,bSize);
+  ctx.fillRect(w - bSize, h - bSize, bSize, bSize);
 }
 
 function drawQuadrants() {
   ctx.fillStyle = colors[0];
-  ctx.fillRect(0,0,w/2,h/2);
+  ctx.fillRect(0, 0, w / 2, h / 2);
   ctx.fillStyle = colors[1];
-  ctx.fillRect(w/2,0,w/2,h/2);
+  ctx.fillRect(w / 2, 0, w / 2, h / 2);
   ctx.fillStyle = colors[2];
-  ctx.fillRect(0,h/2,w/2,h/2);
+  ctx.fillRect(0, h / 2, w / 2, h / 2);
   ctx.fillStyle = colors[3];
-  ctx.fillRect(w/2,h/2,w/2,h/2);
+  ctx.fillRect(w / 2, h / 2, w / 2, h / 2);
 }
 
 function brush(x, y) {
@@ -207,9 +203,14 @@ function brush(x, y) {
   // ctx.arc(x, y, 25, 0, Math.PI*2);
   // ctx.fill();
   ctx.save();
-  ctx.translate(x,y);
-  for(var i = 0; i < 500; i++) {
-    ctx.fillRect(Math.floor(Math.random()*(bs))-bs/2,Math.floor(Math.random()*(bs))-bs/2,1,1);
+  ctx.translate(x, y);
+  for (var i = 0; i < 500; i++) {
+    ctx.fillRect(
+      Math.floor(Math.random() * bs) - bs / 2,
+      Math.floor(Math.random() * bs) - bs / 2,
+      1,
+      1
+    );
   }
   ctx.restore();
 }
@@ -218,8 +219,8 @@ function squareBrush(x, y) {
   var bs = bSize;
   ctx.fillStyle = currentColor;
   ctx.save();
-  ctx.translate(x,y);
-  ctx.fillRect(-bs/2,-bs/2,bs,bs);
+  ctx.translate(x, y);
+  ctx.fillRect(-bs / 2, -bs / 2, bs, bs);
   ctx.restore();
 }
 
@@ -234,40 +235,40 @@ function imageBrush(x, y, brushImg, color) {
 }
 
 function checkPercentage() {
-  var reds = colors.map(c => hexToDecimal(c,1));
-  var counts = [0,0,0,0];
-  var imgd = ctx.getImageData(0,0,w,h);
-  for(var i = 0; i <= imgd.data.length; i += 4) {
-    for(var j = 0; j < 4; j++) {
-      if(imgd.data[i] == reds[j]) {
+  var reds = colors.map((c) => hexToDecimal(c, 1));
+  var counts = [0, 0, 0, 0];
+  var imgd = ctx.getImageData(0, 0, w, h);
+  for (var i = 0; i <= imgd.data.length; i += 4) {
+    for (var j = 0; j < 4; j++) {
+      if (imgd.data[i] == reds[j]) {
         counts[j]++;
       }
     }
   }
-  currentPs = counts.map(x => (x / (w*h))*100);
+  currentPs = counts.map((x) => (x / (w * h)) * 100);
   adjustBars("current", currentPs);
 }
 
 function adjustBars(which, amountsArray) {
-  for(var i = 0; i < amountsArray.length; i++) {
-    var cn = "."+which+" .indicator" + (i + 1);
-    document.querySelector(cn).style.width = (amountsArray[i]) + "%";
+  for (var i = 0; i < amountsArray.length; i++) {
+    var cn = "." + which + " .indicator" + (i + 1);
+    document.querySelector(cn).style.width = amountsArray[i] + "%";
   }
 }
 
 function checkForWin() {
   var allWithin = true;
   var offBy = 0;
-  for(var i = 0; i < 4; i++) {
+  for (var i = 0; i < 4; i++) {
     var tolerance = 5;
-    let diff = Math.abs( currentPs[i] - goalPs[i] );
+    let diff = Math.abs(currentPs[i] - goalPs[i]);
     offBy += diff;
-    if( diff > tolerance ) {
+    if (diff > tolerance) {
       allWithin = false;
     }
   }
-  if(allWithin) {
-    console.log("off by: "+offBy);
+  if (allWithin) {
+    console.log("off by: " + offBy);
     matchAnimation();
     levelUp();
     goalPs = generateRandomGoals();
@@ -288,18 +289,19 @@ function matchAnimation() {
   // ms.classList.add("up");
   setTimeout(function (e) {
     wm.classList.add("hidden");
-  }, 1000)
+  }, 1000);
   // setTimeout(function (e) {
   //   ms.classList.remove("up");
   // }, 300)
 }
 
 function startGame() {
-  for(var i = 0; i < brushImgs.length; i++) {
+  for (var i = 0; i < brushImgs.length; i++) {
     makeColoredBrushImage(brushImgs[i], colors[i]);
   }
   document.querySelector(".start-screen").classList.add("hidden");
   timerTick = setInterval(tick, 1000);
+  console.log("! - " + spritePositionToImagePosition(2, 2).x);
 }
 
 function endGame() {
@@ -314,22 +316,22 @@ function endGame() {
 //
 
 // document.addEventListener("mousedown", function(e){
-  // if(e.target == c) {
-  //   var eyedrop = ctx.getImageData(e.offsetX, e.offsetY, 1, 1);
-  //   currentColor = "rgb("+eyedrop.data[0]+","+eyedrop.data[1]+","+eyedrop.data[2]+")";
-  // }
-  // isMouseDown = true;
+// if(e.target == c) {
+//   var eyedrop = ctx.getImageData(e.offsetX, e.offsetY, 1, 1);
+//   currentColor = "rgb("+eyedrop.data[0]+","+eyedrop.data[1]+","+eyedrop.data[2]+")";
+// }
+// isMouseDown = true;
 // })
 
-uc.addEventListener('mousemove', function(e){
-  if(isSinglePlayer) {
+uc.addEventListener("mousemove", function (e) {
+  if (isSinglePlayer) {
     players[0].x = e.offsetX;
     players[0].y = e.offsetY;
-    if(isMouseDown) {
+    if (isMouseDown) {
       squareBrush(players[0].x, players[0].y);
     }
   }
-})
+});
 
 // document.addEventListener("mouseup", function(){
 //   checkForWin();
@@ -357,28 +359,28 @@ function handleKeyDown(key, playerObject) {
 }
 
 document.addEventListener("keydown", function (e) {
-  if(isSinglePlayer) {
+  if (isSinglePlayer) {
     isMouseDown = true;
-    switch(e.key) {
-      case '1':
+    switch (e.key) {
+      case "1":
         currentColor = colors[0];
-      break;
-      case '2':
+        break;
+      case "2":
         currentColor = colors[1];
-      break;
-      case '3':
+        break;
+      case "3":
         currentColor = colors[2];
-      break;
-      case '4':
+        break;
+      case "4":
         currentColor = colors[3];
-      break;
+        break;
     }
   } else {
     for (var i = 0; i < players.length; i++) {
       handleKeyDown(e.key, players[i]);
     }
   }
-})
+});
 
 function handleKeyUp(key, playerObject) {
   switch (key) {
@@ -397,10 +399,10 @@ function handleKeyUp(key, playerObject) {
     case playerObject.keyButton1:
       playerObject.isDrawing = false;
       break;
-    case '1':
-    case '2':
-    case '3':
-    case '4':
+    case "1":
+    case "2":
+    case "3":
+    case "4":
       isMouseDown = false;
       break;
   }
@@ -411,46 +413,61 @@ document.addEventListener("keyup", function (e) {
   for (var i = 0; i < players.length; i++) {
     handleKeyUp(e.key, players[i]);
   }
-})
+});
 
-document.querySelector(".start-screen .start-1p").addEventListener("click", function(e) {
-  isSinglePlayer = true;
-  players[0].active = true;
-  startGame();
-})
+document
+  .querySelector(".start-screen .start-1p")
+  .addEventListener("click", function (e) {
+    isSinglePlayer = true;
+    players[0].active = true;
+    startGame();
+  });
 
-document.querySelector(".start-screen .start-4p").addEventListener("click", function (e) {
-  isSinglePlayer = false;
-  players[0].active = true;
-  players[1].active = true;
-  players[2].active = true;
-  players[3].active = true;
-  startGame();
-})
+document
+  .querySelector(".start-screen .start-4p")
+  .addEventListener("click", function (e) {
+    isSinglePlayer = false;
+    players[0].active = true;
+    players[1].active = true;
+    players[2].active = true;
+    players[3].active = true;
+    startGame();
+  });
 
 ctx.fillStyle = "#2d2d2d";
-ctx.fillRect(0,0,w,h);
+ctx.fillRect(0, 0, w, h);
 // drawCorners();
 drawQuadrants();
 goalPs = generateRandomGoals();
-setInterval(checkPercentage,300);
+setInterval(checkPercentage, 300);
 
 function drawPaint() {
-  for(var i = 0; i < players.length; i++) {
-    if(players[i].isDrawing) {
-      imageBrush(players[i].x, players[i].y, players[i].brushImage, players[i].color);
+  for (var i = 0; i < players.length; i++) {
+    if (players[i].isDrawing) {
+      imageBrush(
+        players[i].x,
+        players[i].y,
+        players[i].brushImage,
+        players[i].color
+      );
     }
   }
   requestAnimationFrame(drawPaint);
 }
 
 function drawCursors() {
-  uctx.clearRect(0,0,w,h);
-  for(var i = 0; i < players.length; i++) {
-    if(players[i].active) {
-      if(!isSinglePlayer) {
-        players[i].vx = Math.min(Math.max(players[i].vx, -maxVelocity), maxVelocity);
-        players[i].vy = Math.min(Math.max(players[i].vy, -maxVelocity), maxVelocity);
+  uctx.clearRect(0, 0, w, h);
+  for (var i = 0; i < players.length; i++) {
+    if (players[i].active) {
+      if (!isSinglePlayer) {
+        players[i].vx = Math.min(
+          Math.max(players[i].vx, -maxVelocity),
+          maxVelocity
+        );
+        players[i].vy = Math.min(
+          Math.max(players[i].vy, -maxVelocity),
+          maxVelocity
+        );
         players[i].x += players[i].vx;
         players[i].y += players[i].vy;
       }

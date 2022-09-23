@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Roundabout";
-  src: url("../color-balance/ChevyRayRoundabout.ttf") format("truetype");
+  src: url("./ChevyRayRoundabout.ttf") format("truetype");
 }
 
 html {
@@ -153,6 +153,10 @@ p {
 }
 
 #brushes {
+  display: none;
+}
+
+#sprite {
   display: none;
 }
 
