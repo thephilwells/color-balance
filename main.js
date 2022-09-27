@@ -491,25 +491,6 @@ function drawCursors() {
   requestAnimationFrame(drawCursors);
 }
 
-function drawSprite() {
-  uctx.clearRect(0, 0, w, h);
 
-
-  uctx.drawImage(
-    spriteImage,
-    position.x,
-    position.y,
-    16,
-    16,
-    players[0].x,
-    players[0].y,
-    16,
-    16
-  );
-
-  requestAnimationFrame(drawSprite);
-}
-
-// drawSprite();
 drawPaint();
 drawCursors();
