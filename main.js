@@ -21,6 +21,7 @@ var brushImgs = [
   document.getElementById("brush-sp"),
 ];
 var cursorImg = document.getElementById("cursor");
+var spriteImage = document.getElementById("character-sprite");
 
 c.width = w;
 c.height = h;
@@ -301,7 +302,8 @@ function startGame() {
   }
   document.querySelector(".start-screen").classList.add("hidden");
   timerTick = setInterval(tick, 1000);
-  console.log("! - " + spritePositionToImagePosition(2, 2).x);
+  console.log("! - " + spritePositionToImagePosition(1, 0).x);
+  console.log("! - " + spritePositionToImagePosition(1, 0).y);
 }
 
 function endGame() {
@@ -457,6 +459,7 @@ function drawPaint() {
 
 function drawCursors() {
   uctx.clearRect(0, 0, w, h);
+  const spritePosition = spritePositionToImagePosition(1, 0);
   for (var i = 0; i < players.length; i++) {
     if (players[i].active) {
       if (!isSinglePlayer) {
@@ -472,10 +475,41 @@ function drawCursors() {
         players[i].y += players[i].vy;
       }
       uctx.drawImage(cursorImg, players[i].x, players[i].y, 25, 25);
+      uctx.drawImage(
+        spriteImage,
+        spritePosition.x,
+        spritePosition.y,
+        16,
+        16,
+        players[0].x + 16,
+        players[0].y + 16,
+        16,
+        16
+      );
     }
   }
   requestAnimationFrame(drawCursors);
 }
 
+function drawSprite() {
+  uctx.clearRect(0, 0, w, h);
+
+
+  uctx.drawImage(
+    spriteImage,
+    position.x,
+    position.y,
+    16,
+    16,
+    players[0].x,
+    players[0].y,
+    16,
+    16
+  );
+
+  requestAnimationFrame(drawSprite);
+}
+
+// drawSprite();
 drawPaint();
 drawCursors();
