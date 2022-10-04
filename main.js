@@ -474,7 +474,7 @@ function drawCursors() {
         players[i].y += players[i].vy;
       }
       uctx.drawImage(cursorImg, players[i].x, players[i].y, 25, 25);
-      sprite.drawSprite(uctx, players[0])
+      sprite.drawSprite(uctx, players[i])
     }
   }
   requestAnimationFrame(drawCursors);
