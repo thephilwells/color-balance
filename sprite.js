@@ -33,6 +33,7 @@ export class Sprite {
 
   getSpritePosition(player, playerIndex) {
     const playerOffset = playerIndex * 10;
+    const playerBop = player.bop == "up" || player.facing == "up" ? 0 : 1;
     let facingOffset;
     switch (player.facing) {
       case "up":
@@ -48,6 +49,14 @@ export class Sprite {
         facingOffset = 0;
         break;
     }
-    return [0, 0 + (playerOffset + facingOffset)];
+    return [0 + playerBop, 0 + (playerOffset + facingOffset)];
+  }
+
+  bop(players) {
+    players.forEach(player => {
+      if(!player.isMoving) {
+        player.bop = player.bop == "up" ? "down" : "up"
+      }
+    })
   }
 }

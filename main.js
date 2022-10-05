@@ -61,6 +61,8 @@ var players = [
     keyButton1: "q", //draw, ok
     keyButton2: "e", //switch color, cancel
     facing: "down",
+    isMoving: false,
+    bop: "up",
   },
   {
     active: false,
@@ -78,6 +80,8 @@ var players = [
     keyButton1: "u", //draw, ok
     keyButton2: "o", //switch color, cancel
     facing: "down",
+    isMoving: false,
+    bop: "up",
   },
   {
     active: false,
@@ -95,6 +99,8 @@ var players = [
     keyButton1: "b", //draw, ok
     keyButton2: "e", //switch color, cancel
     facing: "down",
+    isMoving: false,
+    bop: "up",
   },
   {
     active: false,
@@ -112,6 +118,8 @@ var players = [
     keyButton1: "8", //draw, ok
     keyButton2: "e", //switch color, cancel
     facing: "down",
+    isMoving: false,
+    bop: "up",
   },
 ];
 
@@ -305,6 +313,7 @@ function startGame() {
     makeColoredBrushImage(brushImgs[i], colors[i]);
   }
   document.querySelector(".start-screen").classList.add("hidden");
+  bopTick = setInterval(sprite.bop, 500, players);
   timerTick = setInterval(tick, 1000);
   console.log("! - " + sprite.spritePositionToImagePosition(1, 0).x);
   console.log("! - " + sprite.spritePositionToImagePosition(1, 0).y);
@@ -393,7 +402,8 @@ document.addEventListener("keydown", function (e) {
 });
 
 function handleKeyUp(key, playerObject) {
-  playerObject.facing = "down";
+        playerObject.facing = "down";
+        playerObject.isMoving = false;
   switch (key) {
     case playerObject.keyUp:
       playerObject.vy = 0;
