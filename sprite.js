@@ -16,8 +16,8 @@ export class Sprite {
   }
 
   drawSprite(canvasContext, player, playerIndex) {
-    let [row, col] = this.getSpritePosition(player, playerIndex)
-    const spritePosition = this.spritePositionToImagePosition(row, col)
+    let [row, col] = this.getSpritePosition(player, playerIndex);
+    const spritePosition = this.spritePositionToImagePosition(row, col);
     canvasContext.drawImage(
       this.spriteImage,
       spritePosition.x,
@@ -32,7 +32,22 @@ export class Sprite {
   }
 
   getSpritePosition(player, playerIndex) {
-    // TODO - make it real
-    return [0, 0 + (playerIndex * 10)];
+    const playerOffset = playerIndex * 10;
+    let facingOffset;
+    switch (player.facing) {
+      case "up":
+        facingOffset = 6;
+        break;
+      case "left":
+        facingOffset = 5;
+        break;
+      case "right":
+        facingOffset = 4;
+        break;
+      default:
+        facingOffset = 0;
+        break;
+    }
+    return [0, 0 + (playerOffset + facingOffset)];
   }
 }

@@ -60,6 +60,7 @@ var players = [
     keyRight: "d",
     keyButton1: "q", //draw, ok
     keyButton2: "e", //switch color, cancel
+    facing: "down",
   },
   {
     active: false,
@@ -76,6 +77,7 @@ var players = [
     keyRight: "l",
     keyButton1: "u", //draw, ok
     keyButton2: "o", //switch color, cancel
+    facing: "down",
   },
   {
     active: false,
@@ -92,6 +94,7 @@ var players = [
     keyRight: "v",
     keyButton1: "b", //draw, ok
     keyButton2: "e", //switch color, cancel
+    facing: "down",
   },
   {
     active: false,
@@ -108,6 +111,7 @@ var players = [
     keyRight: "=",
     keyButton1: "8", //draw, ok
     keyButton2: "e", //switch color, cancel
+    facing: "down",
   },
 ];
 
@@ -343,15 +347,19 @@ uc.addEventListener("mousemove", function (e) {
 function handleKeyDown(key, playerObject) {
   switch (key) {
     case playerObject.keyUp:
+      playerObject.facing = "up";
       playerObject.vy -= movementSpeed;
       break;
-    case playerObject.keyLeft:
+      case playerObject.keyLeft:
+      playerObject.facing = "left";
       playerObject.vx -= movementSpeed;
       break;
-    case playerObject.keyDown:
-      playerObject.vy += movementSpeed;
-      break;
-    case playerObject.keyRight:
+      case playerObject.keyDown:
+        playerObject.facing = "down";
+        playerObject.vy += movementSpeed;
+        break;
+        case playerObject.keyRight:
+      playerObject.facing = "right";
       playerObject.vx += movementSpeed;
       break;
     case playerObject.keyButton1:
@@ -385,6 +393,7 @@ document.addEventListener("keydown", function (e) {
 });
 
 function handleKeyUp(key, playerObject) {
+  playerObject.facing = "down";
   switch (key) {
     case playerObject.keyUp:
       playerObject.vy = 0;
