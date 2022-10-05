@@ -154,12 +154,15 @@ function makeColoredBrushImage(imgSrc, color) {
 }
 
 function tick() {
-  timer += 1;
-  if (timer > 60) {
-    clearTimeout(timerTick);
-    endGame();
-  } else {
-    document.querySelector(".time-remaining").innerHTML = 60 - timer + "s";
+  timer += .5;
+  sprite.bop(players)
+  if (timer % 1 == 0) {
+    if (timer > 60) {
+      clearTimeout(timerTick);
+      endGame();
+    } else {
+      document.querySelector(".time-remaining").innerHTML = 60 - timer + "s";
+    }
   }
 }
 
@@ -313,8 +316,8 @@ function startGame() {
     makeColoredBrushImage(brushImgs[i], colors[i]);
   }
   document.querySelector(".start-screen").classList.add("hidden");
-  bopTick = setInterval(sprite.bop, 500, players);
-  timerTick = setInterval(tick, 1000);
+  // bopTick = setInterval(sprite.bop, 500, players);
+  timerTick = setInterval(tick, 500);
   console.log("! - " + sprite.spritePositionToImagePosition(1, 0).x);
   console.log("! - " + sprite.spritePositionToImagePosition(1, 0).y);
 }
