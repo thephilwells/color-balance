@@ -10,13 +10,13 @@ export class Sprite {
 
   spritePositionToImagePosition(row, col) {
     return {
-      x: borderWidth + col * (spacingWidth + spriteWidth),
-      y: borderWidth + row * (spacingWidth + spriteHeight),
+      x: borderWidth + row * (spacingWidth + spriteWidth),
+      y: borderWidth + col * (spacingWidth + spriteHeight),
     };
   }
 
-  drawSprite(canvasContext, player) {
-    let [row, col] = this.getSpritePosition(player)
+  drawSprite(canvasContext, player, playerIndex) {
+    let [row, col] = this.getSpritePosition(player, playerIndex)
     const spritePosition = this.spritePositionToImagePosition(row, col)
     canvasContext.drawImage(
       this.spriteImage,
@@ -31,8 +31,8 @@ export class Sprite {
     );
   }
 
-  getSpritePosition(player) {
+  getSpritePosition(player, playerIndex) {
     // TODO - make it real
-    return [1, 0];
+    return [0, 0 + (playerIndex * 10)];
   }
 }
