@@ -12,7 +12,8 @@
       <div class="start-screen">
         <div class="start-screen-content">
           <h1>Color<br>Balance</h1>
-          <button>Start!</button>
+          <button class="start-1p">1 Player</button>
+          <button class="start-4p">4 Players</button>
         </div>
       </div>
       <div class="main">
@@ -23,7 +24,7 @@
           </div>
           <div class="col">
           <p>Time Remaining</p>
-          <p class="time-remaining">120s</p>
+          <p class="time-remaining">60s</p>
           </div>
         </div>
         <div class="indicator-area">
@@ -48,7 +49,10 @@
           <div class="indicator4"></div>
         </div>
         </div>
-        <canvas id="canvas"></canvas>
+        <div class="canvas-container">
+          <canvas id="canvas"></canvas>
+          <canvas id="ui-canvas"></canvas>
+        </div>
         <p class="win-message hidden">Match!</p>
         <div class="keyboard-controls">
           <p>A</p>
@@ -66,9 +70,15 @@
         </div>
       </div>
       <div id="brushes">
-        <img id="brush-sq" src="brush-square.png">
-        <img id="brush-sl" src="brush-slash.png">
+        <img preload id="cursor" src="cursor.png">
+        <img preload id="brush-sq" src="brush-square.png">
+        <img preload id="brush-sl" src="brush-slash.png">
+        <img preload id="brush-st" src="brush-star.png">
+        <img preload id="brush-sp" src="brush-spray.png">
       </div>
-      <script src="main.js"></script>
+      <div id="sprite">
+        <img preload id="character-sprite" src="character-sprite.png">
+      </div>
+      <script type="module" defer src="main.js"></script>
     </body>
 </html>
