@@ -1,4 +1,4 @@
-import { Sprite } from "./sprite.js";
+const {Sprite } = require("./sprite.js");
 
 //setup
 var w = document.querySelector(".main").offsetWidth;
