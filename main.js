@@ -1,4 +1,5 @@
 const {Sprite } = require("./sprite.js");
+var ipc = require("electron").ipc;
 
 //setup
 var w = document.querySelector(".main").offsetWidth;
