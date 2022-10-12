@@ -3,7 +3,7 @@ const spriteHeight = 16;
 const borderWidth = 1;
 const spacingWidth = 0;
 
-class Sprite {
+export class Sprite {
   spriteImage = "";
   constructor(spriteImage) {
     this.spriteImage = spriteImage;
@@ -62,6 +62,6 @@ class Sprite {
   }
 }
 
-module.exports = {
-  Sprite
-}
+// module.exports = {
+//   Sprite
+// }
