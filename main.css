@@ -52,6 +52,13 @@ canvas {
   z-index: 1;
   transition: all .5s;
   top: 0;
+  left: 0;
+}
+
+.start-screen {
+  background-image: url(rainbows.svg);
+  background-size: contain;
+  background-position-y: center - 8px;
 }
 
 .start-screen-content,
@@ -73,9 +80,11 @@ canvas {
 }
 
 .start-screen-content h1 {
-  font-size: 70px;
+  font-size: 208px;
+  font-weight: 400;
   letter-spacing: 3px;
   line-height: 0.8;
+  margin-top: 90px;
   margin-bottom: 15vh;
 }
 
