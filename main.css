@@ -76,15 +76,15 @@ canvas {
 
 .start-screen.hidden,
 .end-screen.hidden {
-  top: 100vh;
+  top: 120vh;
 }
 
 .start-screen-content h1 {
-  font-size: 208px;
+  font-size: 180px;
   font-weight: 400;
   letter-spacing: 3px;
   line-height: 0.8;
-  margin-top: 90px;
+  margin-top: 40px;
   margin-bottom: 15vh;
 }
 

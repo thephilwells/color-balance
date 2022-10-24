@@ -11,8 +11,12 @@ const createWindow = () => {
     },
   });
 
+  win.setResizable(false);
   win.loadFile("index.html");
 };
+
+// This will re-launch electron if we quit using Cmd/Ctrl-Q. Helps with reloading during development
+app.relaunch();
 
 app.whenReady().then(() => {
   createWindow();

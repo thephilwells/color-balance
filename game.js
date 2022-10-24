@@ -33,7 +33,6 @@ var colors = ["#ffffff", "#3d1591", "#F7C924", "#F96C6C"];
 var currentColor = colors[0];
 
 //state
-var isSinglePlayer = true;
 var isMouseDown = false;
 var timer = 0;
 var timerTick;
@@ -329,33 +328,6 @@ function endGame() {
   document.querySelector(".final-image").src = imgData;
 }
 
-//
-//COMMENTING OUT MOUSE CODE FOR NOW
-//
-
-// document.addEventListener("mousedown", function(e){
-// if(e.target == c) {
-//   var eyedrop = ctx.getImageData(e.offsetX, e.offsetY, 1, 1);
-//   currentColor = "rgb("+eyedrop.data[0]+","+eyedrop.data[1]+","+eyedrop.data[2]+")";
-// }
-// isMouseDown = true;
-// })
-
-uc.addEventListener("mousemove", function (e) {
-  if (isSinglePlayer) {
-    players[0].x = e.offsetX;
-    players[0].y = e.offsetY;
-    if (isMouseDown) {
-      squareBrush(players[0].x, players[0].y);
-    }
-  }
-});
-
-// document.addEventListener("mouseup", function(){
-//   checkForWin();
-//   isMouseDown = false;
-// });
-
 function handleKeyDown(key, playerObject) {
   switch (key) {
     case playerObject.keyUp:
@@ -381,32 +353,14 @@ function handleKeyDown(key, playerObject) {
 }
 
 document.addEventListener("keydown", function (e) {
-  if (isSinglePlayer) {
-    isMouseDown = true;
-    switch (e.key) {
-      case "1":
-        currentColor = colors[0];
-        break;
-      case "2":
-        currentColor = colors[1];
-        break;
-      case "3":
-        currentColor = colors[2];
-        break;
-      case "4":
-        currentColor = colors[3];
-        break;
-    }
-  } else {
-    for (var i = 0; i < players.length; i++) {
-      handleKeyDown(e.key, players[i]);
-    }
+  for (var i = 0; i < players.length; i++) {
+    handleKeyDown(e.key, players[i]);
   }
 });
 
 function handleKeyUp(key, playerObject) {
-        playerObject.facing = "down";
-        playerObject.isMoving = false;
+  playerObject.facing = "down";
+  playerObject.isMoving = false;
   switch (key) {
     case playerObject.keyUp:
       playerObject.vy = 0;
@@ -440,17 +394,8 @@ document.addEventListener("keyup", function (e) {
 });
 
 document
-  .querySelector(".start-screen .start-1p")
-  .addEventListener("click", function (e) {
-    isSinglePlayer = true;
-    players[0].active = true;
-    startGame();
-  });
-
-document
   .querySelector(".start-screen .start-4p")
   .addEventListener("click", function (e) {
-    isSinglePlayer = false;
     players[0].active = true;
     players[1].active = true;
     players[2].active = true;
@@ -483,20 +428,18 @@ function drawCursors() {
   uctx.clearRect(0, 0, w, h);
   for (var i = 0; i < players.length; i++) {
     if (players[i].active) {
-      if (!isSinglePlayer) {
-        players[i].vx = Math.min(
-          Math.max(players[i].vx, -maxVelocity),
-          maxVelocity
-        );
-        players[i].vy = Math.min(
-          Math.max(players[i].vy, -maxVelocity),
-          maxVelocity
-        );
-        players[i].x += players[i].vx;
-        players[i].y += players[i].vy;
-      }
+      players[i].vx = Math.min(
+        Math.max(players[i].vx, -maxVelocity),
+        maxVelocity
+      );
+      players[i].vy = Math.min(
+        Math.max(players[i].vy, -maxVelocity),
+        maxVelocity
+      );
+      players[i].x += players[i].vx;
+      players[i].y += players[i].vy;
       uctx.drawImage(cursorImg, players[i].x, players[i].y, 25, 25);
-      sprite.drawSprite(uctx, players[i], i)
+      sprite.drawSprite(uctx, players[i], i);
     }
   }
   requestAnimationFrame(drawCursors);
