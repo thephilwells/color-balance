@@ -7,6 +7,8 @@ var bSize = 30;
 var currentPs = [];
 var goalPs = [];
 
+var gamePads = [];
+
 var c = document.getElementById("canvas");
 var ctx = c.getContext("2d");
 
@@ -356,6 +358,20 @@ document.addEventListener("keydown", function (e) {
     handleKeyDown(e.key, players[i]);
   }
 });
+
+window.addEventListener("gamepadconnected", function(e) {
+  console.log(`GAMEPAD CONNECT`);
+  gamePads[0] = navigator.getGamepads()[e.gamepad.index];
+  console.log("A "+ gamePads[0].id + " was successfully detected!")
+
+  setInterval(function() {
+    gamePads[0].buttons.forEach((button, i) => {
+      if (button.pressed) {
+        console.log("DOOT! Button " + i + " is pressed")
+      }
+    })
+  }, 100)
+})
 
 function handleKeyUp(key, playerObject) {
   playerObject.facing = "down";
