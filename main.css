@@ -71,6 +71,18 @@ canvas {
   color: #514EFF;
 }
 
+.start-screen h4 {
+  font-family: ChevyRay - Roundabout;
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 27px;
+  letter-spacing: 0.08em;
+  text-align: center;
+  margin-bottom: 0px;
+  position: absolute;
+  bottom: 68px;
+}
+
 .start-screen-content,
 .end-screen-content {
   width: 90vw;
