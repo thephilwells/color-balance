@@ -315,7 +315,6 @@ function startGame() {
     makeColoredBrushImage(brushImgs[i], colors[i]);
   }
   document.querySelector(".start-screen").classList.add("hidden");
-  // bopTick = setInterval(sprite.bop, 500, players);
   timerTick = setInterval(tick, 500);
   console.log("! - " + sprite.spritePositionToImagePosition(1, 0).x);
   console.log("! - " + sprite.spritePositionToImagePosition(1, 0).y);
