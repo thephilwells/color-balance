@@ -9,6 +9,9 @@ var goalPs = [];
 
 var gamePads = [];
 
+var scenes = {SPLASH: "splash", GAME: "game", END: "end"};
+var scene = scenes.SPLASH;
+
 var c = document.getElementById("canvas");
 var ctx = c.getContext("2d");
 
@@ -313,6 +316,11 @@ function matchAnimation() {
 }
 
 function startGame() {
+  scene = scenes.GAME;
+  players[0].active = true;
+  players[1].active = true;
+  players[2].active = true;
+  players[3].active = true;
   for (var i = 0; i < brushImgs.length; i++) {
     makeColoredBrushImage(brushImgs[i], colors[i]);
   }
@@ -366,8 +374,8 @@ window.addEventListener("gamepadconnected", function(e) {
 
   setInterval(function() {
     gamePads[0].buttons.forEach((button, i) => {
-      if (button.pressed) {
-        console.log("DOOT! Button " + i + " is pressed")
+      if (scene == scenes.SPLASH && button.pressed) {
+        startGame()
       }
     })
   }, 100)
@@ -411,10 +419,6 @@ document.addEventListener("keyup", function (e) {
 document
   .querySelector(".start-screen .start-4p")
   .addEventListener("click", function (e) {
-    players[0].active = true;
-    players[1].active = true;
-    players[2].active = true;
-    players[3].active = true;
     startGame();
   });
 
