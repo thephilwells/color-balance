@@ -1,4 +1,5 @@
 import { Sprite } from "./sprite.js";
+const {GamepadListener, gamepad } = require("gamepad.js");
 
 //setup
 var w = document.querySelector(".main").offsetWidth;
@@ -158,7 +159,7 @@ function makeColoredBrushImage(imgSrc, color) {
 }
 
 function tick() {
-  timer += .5;
+  timer += 1;
   sprite.bop(players)
   if (timer % 1 == 0) {
     if (timer > 60) {
@@ -325,7 +326,7 @@ function startGame() {
     makeColoredBrushImage(brushImgs[i], colors[i]);
   }
   document.querySelector(".start-screen").classList.add("hidden");
-  timerTick = setInterval(tick, 500);
+  timerTick = setInterval(tick, 1000);
   console.log("! - " + sprite.spritePositionToImagePosition(1, 0).x);
   console.log("! - " + sprite.spritePositionToImagePosition(1, 0).y);
 }
@@ -336,6 +337,32 @@ function endGame() {
   var imgData = c.toDataURL("image/png");
   document.querySelector(".final-image").src = imgData;
 }
+
+// const gamepadListener = new GamepadListener();
+// gamepadListener.start();
+// gamepadListener.on('gamepad:connected', function(event) {
+//   console.log(event)
+// })
+
+// gamepadListener.on('gamepad:0:button', function(event) {
+//   if (scene = scenes.SPLASH) {
+//     startGame()
+//   }
+// })
+
+window.addEventListener("gamepadconnected", function(e) {
+  console.log(`GAMEPAD CONNECT`);
+  gamePads[0] = navigator.getGamepads()[e.gamepad.index];
+  console.log("A "+ gamePads[0].id + " was successfully detected!")
+
+  setInterval(function() {
+    gamePads[0].buttons.forEach((button, i) => {
+      if (scene == scenes.SPLASH && button.pressed) {
+        startGame()
+      }
+    })
+  }, 100)
+})
 
 function handleKeyDown(key, playerObject) {
   switch (key) {
@@ -366,20 +393,6 @@ document.addEventListener("keydown", function (e) {
     handleKeyDown(e.key, players[i]);
   }
 });
-
-window.addEventListener("gamepadconnected", function(e) {
-  console.log(`GAMEPAD CONNECT`);
-  gamePads[0] = navigator.getGamepads()[e.gamepad.index];
-  console.log("A "+ gamePads[0].id + " was successfully detected!")
-
-  setInterval(function() {
-    gamePads[0].buttons.forEach((button, i) => {
-      if (scene == scenes.SPLASH && button.pressed) {
-        startGame()
-      }
-    })
-  }, 100)
-})
 
 function handleKeyUp(key, playerObject) {
   playerObject.facing = "down";

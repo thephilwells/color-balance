@@ -61,7 +61,3 @@ export class Sprite {
     })
   }
 }
-
-// module.exports = {
-//   Sprite
-// }
